@@ -59,27 +59,10 @@ public class TheOneInputOnline implements TheOneInput {
         if(this.token == null) {
             throw new IllegalStateException("Cannot perform request: token is null");
         }
-        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            String link = "https://the-one-api.dev/v2/character";
-            HttpGet request = new HttpGet(link);
-            request.setHeader("User-Agent", "Java client");
-            request.setHeader("Authorization", "Bearer " + this.token);
-            request.setHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            CloseableHttpResponse response = client.execute(request);
-
-            BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
-
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = bufReader.readLine()) != null) {
-                builder.append(line);
-                builder.append(System.lineSeparator());
-            }
+        String link = "https://the-one-api.dev/v2/character";
+        StringBuilder builder = connectAndExtract(link);
+        if(builder != null) {
             return stringBeautify(builder);
-        } catch (Exception e) {
-            System.out.println("Exception in NetClientGet:- " + e);
         }
         return null;
     }
@@ -99,27 +82,10 @@ public class TheOneInputOnline implements TheOneInput {
         if(this.token == null) {
             throw new IllegalStateException("Cannot perform request: token is null");
         }
-        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            String link = "https://the-one-api.dev/v2/character/" + characterID + "/quote";
-            HttpGet request = new HttpGet(link);
-            request.setHeader("User-Agent", "Java client");
-            request.setHeader("Authorization", "Bearer " + this.token);
-            request.setHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            CloseableHttpResponse response = client.execute(request);
-
-            BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
-
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = bufReader.readLine()) != null) {
-                builder.append(line);
-                builder.append(System.lineSeparator());
-            }
+        String link = "https://the-one-api.dev/v2/character/" + characterID + "/quote";
+        StringBuilder builder = connectAndExtract(link);
+        if(builder != null) {
             return stringBeautify(builder);
-        } catch (Exception e) {
-            System.out.println("Exception in NetClientGet:- " + e);
         }
         return null;
     }
@@ -139,8 +105,16 @@ public class TheOneInputOnline implements TheOneInput {
         if(this.token == null) {
             throw new IllegalStateException("Cannot perform request: token is null");
         }
+        String link = "https://the-one-api.dev/v2/character/" + characterID;
+        StringBuilder builder = connectAndExtract(link);
+        if(builder != null) {
+            return stringBeautify(builder);
+        }
+        return null;
+    }
+
+    private StringBuilder connectAndExtract(String link) {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            String link = "https://the-one-api.dev/v2/character/" + characterID;
             HttpGet request = new HttpGet(link);
             request.setHeader("User-Agent", "Java client");
             request.setHeader("Authorization", "Bearer " + this.token);
@@ -155,9 +129,9 @@ public class TheOneInputOnline implements TheOneInput {
             String line;
             while ((line = bufReader.readLine()) != null) {
                 builder.append(line);
+                builder.append(System.lineSeparator());
             }
-            return stringBeautify(builder);
-
+            return builder;
         } catch (Exception e) {
             System.out.println("Exception in NetClientGet:- " + e);
         }
