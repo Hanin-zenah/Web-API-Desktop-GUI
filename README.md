@@ -12,7 +12,7 @@ The application will send report data on a specified character from the-one API 
 
 This software has been built by following a Test-Driven Development approach. Only the main features implemented for the backend (model) are tested.
 
-### Concurrency 
+## Concurrency 
 I have utilised Swing's threads (Event Dispatch Thread, and Worker threads) to create a non-freezing GUI such that multiple requests can be made independently at the same time.
 
 ## Quirks For Running My Application
